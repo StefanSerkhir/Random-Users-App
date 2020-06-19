@@ -7,11 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,10 @@ public class RandomUsersActivity extends AppCompatActivity {
         }
 
         public void bindRandomUserItem(RandomUser item, int position) {
-            mUserNumberTextView.setText(position + ".");
+            mUserNumberTextView.setText(String.valueOf(position + "."));
+            Picasso.get()
+                    .load(item.getAvatarURL())
+                    .into(mUserAvatarImageView);
             mUserFullNameTextView.setText(item.getFullName());
         }
     }
