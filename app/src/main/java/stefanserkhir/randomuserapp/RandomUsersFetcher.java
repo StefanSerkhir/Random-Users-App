@@ -1,5 +1,8 @@
 package stefanserkhir.randomuserapp;
 
+import android.net.Uri;
+import android.util.Log;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,7 +10,9 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-public class RandomuserFetcher {
+public class RandomUsersFetcher {
+    private static final String TAG = "RandomUsersFetcher";
+
     public byte[] getURLBytes(String stringURL) throws IOException {
         URL url = new URL(stringURL);
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
@@ -33,5 +38,20 @@ public class RandomuserFetcher {
 
     public String getURLContent(String stringURL) throws IOException {
         return new String(getURLBytes(stringURL));
+    }
+
+    public void fetchRandomUsers() {
+        try {
+            String stringURL = Uri.parse("https://randomuser.me/api/")
+                    .buildUpon()
+                    .appendQueryParameter("results", "40")
+                    .appendQueryParameter("format", "json")
+                    .appendQueryParameter("noinfo", "1")
+                    .build().toString();
+            String jsonString = getURLContent(stringURL);
+            Log.i(TAG, "Received JSON: " + jsonString);
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to fetch users", e);
+        }
     }
 }

@@ -23,12 +23,7 @@ public class RandomUsersActivity extends AppCompatActivity {
     private class FetchRandomUsersTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-            try {
-                String result = new RandomuserFetcher().getURLContent("https://randomuser.me/");
-                Log.i(TAG, "Fetched contents of URL: " + result);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            new RandomUsersFetcher().fetchRandomUsers();
             return null;
         }
     }
