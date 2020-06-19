@@ -46,7 +46,7 @@ public class RandomUsersFetcher {
         return new String(getURLBytes(stringURL));
     }
 
-    public void fetchRandomUsers() {
+    public List<RandomUser> fetchRandomUsers() {
         List<RandomUser> randomUsers = new ArrayList<>();
 
         try {
@@ -65,6 +65,8 @@ public class RandomUsersFetcher {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        return randomUsers;
     }
 
     private void parseUsers(List<RandomUser> users, JSONObject jsonBody)
