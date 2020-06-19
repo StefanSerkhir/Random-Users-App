@@ -3,10 +3,16 @@ package stefanserkhir.randomuserapp;
 import android.net.Uri;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -40,7 +46,9 @@ public class RandomUsersFetcher {
         return new String(getURLBytes(stringURL));
     }
 
-    public void fetchRandomUsers() {
+    public List<RandomUser> fetchRandomUsers() {
+        List<RandomUser> randomUsers = new ArrayList<>();
+
         try {
             String stringURL = Uri.parse("https://randomuser.me/api/")
                     .buildUpon()
@@ -50,8 +58,40 @@ public class RandomUsersFetcher {
                     .build().toString();
             String jsonString = getURLContent(stringURL);
             Log.i(TAG, "Received JSON: " + jsonString);
+            JSONObject jsonBody = new JSONObject(jsonString);
+            parseUsers(randomUsers, jsonBody);
         } catch (IOException e) {
             Log.e(TAG, "Failed to fetch users", e);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return randomUsers;
+    }
+
+    private void parseUsers(List<RandomUser> users, JSONObject jsonBody)
+            throws JSONException {
+
+        JSONArray usersJsonArray = jsonBody.getJSONArray("results");
+
+        for (int i = 0; i < usersJsonArray.length(); i++) {
+            JSONObject randomUserJsonObject = usersJsonArray.getJSONObject(i);
+            JSONObject nameOfRandomUserJsonObject = randomUserJsonObject.getJSONObject("name");
+            JSONObject avatarOfRandomUserJsonObject = randomUserJsonObject.getJSONObject("picture");
+
+            RandomUser randomUser = new RandomUser();
+            randomUser.setGender(randomUserJsonObject.getString("gender"));
+            randomUser.setTitle(nameOfRandomUserJsonObject.getString("title"));
+            randomUser.setFirstName(nameOfRandomUserJsonObject.getString("first"));
+            randomUser.setLastName(nameOfRandomUserJsonObject.getString("last"));
+            randomUser.setAvatarURL(avatarOfRandomUserJsonObject.getString("large"));
+            Log.i(TAG, "Random user #" + i + ": gender = " + randomUser.getGender());
+            Log.i(TAG, "Random user #" + i + ": title = " + randomUser.getTitle());
+            Log.i(TAG, "Random user #" + i + ": first = " + randomUser.getFirstName());
+            Log.i(TAG, "Random user #" + i + ": last = " + randomUser.getLastName());
+            Log.i(TAG, "=================================================================");
+
+            users.add(randomUser);
         }
     }
 }
