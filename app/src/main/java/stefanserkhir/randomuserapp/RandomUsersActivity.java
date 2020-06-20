@@ -7,7 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -37,6 +38,22 @@ public class RandomUsersActivity extends AppCompatActivity {
         new FetchRandomUsersTask().execute();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.random_user_item, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.reload_users:
+                new FetchRandomUsersTask().execute();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private class RandomUserHolder extends RecyclerView.ViewHolder {
         private TextView mUserNumberTextView;
         private ImageView mUserAvatarImageView;
@@ -56,7 +73,7 @@ public class RandomUsersActivity extends AppCompatActivity {
                     .load(item.getAvatarURL())
                     .transform(new AvatarTransformation(RandomUsersActivity.this,
                             item.getGender().equals("male") ?
-                                    R.drawable.star_shape_test : R.drawable.heart_shape))
+                                    R.drawable.star_shape : R.drawable.heart_shape))
                     .placeholder(R.drawable.person_placeholder)
                     .into(mUserAvatarImageView);
             mUserFullNameTextView.setText(item.getFullName());
@@ -99,7 +116,11 @@ public class RandomUsersActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<RandomUser> randomUsers) {
             mRandomUsers = randomUsers;
-            mRandomUsersRecyclerView.setAdapter(new RandomUserAdapter(mRandomUsers));
+            if (mRandomUsersRecyclerView.getAdapter() == null) {
+                mRandomUsersRecyclerView.setAdapter(new RandomUserAdapter(mRandomUsers));
+            } else {
+                mRandomUsersRecyclerView.swapAdapter(new RandomUserAdapter(mRandomUsers), false);
+            }
         }
     }
 }
