@@ -21,8 +21,6 @@ import java.util.List;
 
 public class RandomUsersActivity extends AppCompatActivity {
 
-    private static final String TAG = "RandomUsersActivity";
-
     private RecyclerView mRandomUsersRecyclerView;
     private List<RandomUser> mRandomUsers = new ArrayList<>();
 
