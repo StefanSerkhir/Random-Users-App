@@ -40,13 +40,14 @@ public class RandomUsersFetcher {
         }
     }
 
-    public List<RandomUser> fetchRandomUsers() {
+    public List<RandomUser> fetchRandomUsers(int page) {
         List<RandomUser> randomUsers = new ArrayList<>();
 
         try {
             String stringURL = Uri.parse("https://randomuser.me/api/")
                     .buildUpon()
-                    .appendQueryParameter("results", "40")
+                    .appendQueryParameter("results", "10")
+                    .appendQueryParameter("page", String.valueOf(page))
                     .appendQueryParameter("format", "json")
                     .appendQueryParameter("noinfo", "1")
                     .build().toString();

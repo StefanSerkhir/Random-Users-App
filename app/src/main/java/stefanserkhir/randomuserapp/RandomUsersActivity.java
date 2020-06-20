@@ -22,16 +22,22 @@ import java.util.List;
 public class RandomUsersActivity extends AppCompatActivity {
 
     private RecyclerView mRandomUsersRecyclerView;
+    private LinearLayoutManager mLinearLayoutManager;
     private List<RandomUser> mRandomUsers = new ArrayList<>();
+    private int mLoadingPage;
+    private boolean mIsLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_random_users);
 
+        mLoadingPage = 1;
+
         mRandomUsersRecyclerView = findViewById(R.id.random_users_recycler_view);
-        mRandomUsersRecyclerView.setLayoutManager(new LinearLayoutManager(
-                this, RecyclerView.VERTICAL, false));
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mRandomUsersRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mRandomUsersRecyclerView.addOnScrollListener(new ScrollToEndListener());
 
         new FetchRandomUsersTask().execute();
     }
@@ -46,9 +52,27 @@ public class RandomUsersActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.reload_users:
+                mLoadingPage = 1;
                 new FetchRandomUsersTask().execute();
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private class ScrollToEndListener extends RecyclerView.OnScrollListener {
+
+        @Override
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            int visibleItemsCount = mLinearLayoutManager.getChildCount();
+            int totalItemsCount = mLinearLayoutManager.getItemCount();
+            int firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
+            if (!mIsLoading) {
+                if (visibleItemsCount + firstVisibleItem >= totalItemsCount) {
+                    mIsLoading = true;
+                    new FetchRandomUsersTask().execute();
+                }
+            }
         }
     }
 
@@ -108,17 +132,27 @@ public class RandomUsersActivity extends AppCompatActivity {
     private class FetchRandomUsersTask extends AsyncTask<Void, Void, List<RandomUser>> {
         @Override
         protected List<RandomUser> doInBackground(Void... voids) {
-            return new RandomUsersFetcher().fetchRandomUsers();
+            return new RandomUsersFetcher().fetchRandomUsers(mLoadingPage);
         }
 
         @Override
         protected void onPostExecute(List<RandomUser> randomUsers) {
-            mRandomUsers = randomUsers;
+            mLoadingPage++;
+            mIsLoading = false;
+            if (mRandomUsers.size() == 0 | mLoadingPage <= 2) {
+                mRandomUsers = randomUsers;
+                mRandomUsersRecyclerView.setAdapter(new RandomUserAdapter(mRandomUsers));
+            } else {
+                mRandomUsers.addAll(randomUsers);
+                mRandomUsersRecyclerView.swapAdapter(new RandomUserAdapter(mRandomUsers), false);
+            }
+
+/*            mRandomUsers = randomUsers;
             if (mRandomUsersRecyclerView.getAdapter() == null) {
                 mRandomUsersRecyclerView.setAdapter(new RandomUserAdapter(mRandomUsers));
             } else {
                 mRandomUsersRecyclerView.swapAdapter(new RandomUserAdapter(mRandomUsers), false);
-            }
+            }*/
         }
     }
 }
