@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,6 +30,7 @@ public class RandomUsersActivity extends AppCompatActivity {
 
     private RecyclerView mRandomUsersRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
+    private SwipeRefreshLayout mRefreshLayout;
     private List<RandomUser> mRandomUsers = new ArrayList<>();
     private int mLoadingPage;
     private boolean mIsLoading;
@@ -39,14 +40,28 @@ public class RandomUsersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_random_users);
 
-        mLoadingPage = 1;
-
         mRandomUsersRecyclerView = findViewById(R.id.random_users_recycler_view);
         mRandomUsersRecyclerView.setHasFixedSize(true);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRandomUsersRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRandomUsersRecyclerView.addOnScrollListener(new ScrollToEndListener());
 
+        mRefreshLayout = findViewById(R.id.random_users_container);
+        mRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateUI(1);
+                mRefreshLayout.setRefreshing(false);
+
+            }
+        });
+
+        updateUI(1);
+    }
+
+    private void updateUI(int page) {
+        mLoadingPage = page;
         new FetchRandomUsersTask().execute();
     }
 
@@ -60,8 +75,7 @@ public class RandomUsersActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.reload_users:
-                mLoadingPage = 1;
-                new FetchRandomUsersTask().execute();
+                updateUI(1);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -78,7 +92,7 @@ public class RandomUsersActivity extends AppCompatActivity {
             if (!mIsLoading) {
                 if (visibleItemsCount + firstVisibleItem >= totalItemsCount) {
                     mIsLoading = true;
-                    new FetchRandomUsersTask().execute();
+                    updateUI(mLoadingPage);
                 }
             }
         }
