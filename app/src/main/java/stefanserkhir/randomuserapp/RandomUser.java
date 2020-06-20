@@ -15,24 +15,12 @@ public class RandomUser {
         mGender = gender;
     }
 
-    public String getTitle() {
-        return mTitle;
-    }
-
     public void setTitle(String title) {
         mTitle = title;
     }
 
-    public String getFirstName() {
-        return mFirstName;
-    }
-
     public void setFirstName(String firstName) {
         mFirstName = firstName;
-    }
-
-    public String getLastName() {
-        return mLastName;
     }
 
     public void setLastName(String lastName) {

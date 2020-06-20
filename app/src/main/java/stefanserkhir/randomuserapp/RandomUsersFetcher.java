@@ -1,7 +1,6 @@
 package stefanserkhir.randomuserapp;
 
 import android.net.Uri;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,9 +16,8 @@ import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
 
 public class RandomUsersFetcher {
-    private static final String TAG = "RandomUsersFetcher";
 
-    public byte[] getURLBytes(String stringURL) throws IOException {
+    public String getURLContent(String stringURL) throws IOException {
         URL url = new URL(stringURL);
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
@@ -36,14 +34,10 @@ public class RandomUsersFetcher {
                 out.write(buffer, 0, bytesRead);
             }
             out.close();
-            return out.toByteArray();
+            return new String(out.toByteArray());
         } finally {
             connection.disconnect();
         }
-    }
-
-    public String getURLContent(String stringURL) throws IOException {
-        return new String(getURLBytes(stringURL));
     }
 
     public List<RandomUser> fetchRandomUsers() {
