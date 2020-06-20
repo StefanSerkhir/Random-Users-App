@@ -57,12 +57,9 @@ public class RandomUsersFetcher {
                     .appendQueryParameter("noinfo", "1")
                     .build().toString();
             String jsonString = getURLContent(stringURL);
-            Log.i(TAG, "Received JSON: " + jsonString);
             JSONObject jsonBody = new JSONObject(jsonString);
             parseUsers(randomUsers, jsonBody);
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to fetch users", e);
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
 
@@ -85,11 +82,6 @@ public class RandomUsersFetcher {
             randomUser.setFirstName(nameOfRandomUserJsonObject.getString("first"));
             randomUser.setLastName(nameOfRandomUserJsonObject.getString("last"));
             randomUser.setAvatarURL(avatarOfRandomUserJsonObject.getString("large"));
-            Log.i(TAG, "Random user #" + i + ": gender = " + randomUser.getGender());
-            Log.i(TAG, "Random user #" + i + ": title = " + randomUser.getTitle());
-            Log.i(TAG, "Random user #" + i + ": first = " + randomUser.getFirstName());
-            Log.i(TAG, "Random user #" + i + ": last = " + randomUser.getLastName());
-            Log.i(TAG, "=================================================================");
 
             users.add(randomUser);
         }

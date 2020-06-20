@@ -46,4 +46,8 @@ public class RandomUser {
     public void setAvatarURL(String avatarURL) {
         mAvatarURL = avatarURL;
     }
+
+    public String getFullName() {
+        return mTitle + ", " + mFirstName + " " + mLastName;
+    }
 }
