@@ -1,4 +1,4 @@
-package stefanserkhir.randomuserapp;
+package stefanserkhir.randomuserapp.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,7 +11,6 @@ import android.graphics.drawable.Drawable;
 import com.squareup.picasso.Transformation;
 
 public class AvatarTransformation implements Transformation {
-
     private static Paint mMaskingPaint = new Paint();
     private Context mContext;
     private int mMaskId;
@@ -51,7 +50,6 @@ public class AvatarTransformation implements Transformation {
     }
 
     private final static class Utils {
-
         public static Drawable getMaskDrawable(Context context, int maskId) {
             Drawable drawable;
             drawable = context.getDrawable(maskId);
