@@ -1,4 +1,4 @@
-package stefanserkhir.randomuserapp;
+package stefanserkhir.randomuserapp.model;
 
 public class RandomUser {
     private String mGender;

@@ -1,4 +1,4 @@
-package stefanserkhir.randomuserapp;
+package stefanserkhir.randomuserapp.presenter.helpers;
 
 import android.net.Uri;
 
@@ -15,6 +15,8 @@ import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import stefanserkhir.randomuserapp.model.RandomUser;
+
 public class RandomUsersFetcher {
 
     public String getURLContent(String stringURL) throws IOException {
@@ -28,7 +30,7 @@ public class RandomUsersFetcher {
                 throw new IOException(connection.getResponseMessage() + ": with" + stringURL);
             }
 
-            int bytesRead = 0;
+            int bytesRead;
             byte[] buffer = new byte[1024];
             while ((bytesRead = in.read(buffer)) > 0) {
                 out.write(buffer, 0, bytesRead);
