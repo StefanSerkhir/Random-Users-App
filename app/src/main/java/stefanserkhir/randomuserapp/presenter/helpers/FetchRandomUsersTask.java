@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import java.util.List;
 
 import stefanserkhir.randomuserapp.model.RandomUser;
+import stefanserkhir.randomuserapp.repository.RandomUserRepository;
 
 public class FetchRandomUsersTask extends AsyncTask<Void, Void, List<RandomUser>> {
     public interface AfterFetchUsers {
@@ -21,7 +22,7 @@ public class FetchRandomUsersTask extends AsyncTask<Void, Void, List<RandomUser>
 
     @Override
     protected List<RandomUser> doInBackground(Void... voids) {
-        return new RandomUsersFetcher().fetchRandomUsers(mLoadingPage);
+        return new RandomUserRepository().getData(mLoadingPage);
     }
 
     @Override
