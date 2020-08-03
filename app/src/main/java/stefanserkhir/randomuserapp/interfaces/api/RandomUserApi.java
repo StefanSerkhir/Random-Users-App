@@ -1,4 +1,4 @@
-package stefanserkhir.randomuserapp.repository.api;
+package stefanserkhir.randomuserapp.interfaces.api;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

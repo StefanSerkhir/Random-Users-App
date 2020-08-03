@@ -13,7 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import stefanserkhir.randomuserapp.R;
 import stefanserkhir.randomuserapp.interfaces.ui.RandomUsersView;
 import stefanserkhir.randomuserapp.presenter.RandomUsersPresenterImpl;
-import stefanserkhir.randomuserapp.ui.helpers.RandomUserAdapter;
+import stefanserkhir.randomuserapp.ui.helpers.RandomUsersAdapter;
 import stefanserkhir.randomuserapp.ui.helpers.ScrollToEndListener;
 
 public class RandomUsersActivity extends AppCompatActivity implements RandomUsersView {
@@ -66,10 +66,10 @@ public class RandomUsersActivity extends AppCompatActivity implements RandomUser
     @Override
     public void updateUI(boolean wayUpdate) {
         if (wayUpdate) {
-            mRandomUsersRecyclerView.setAdapter(new RandomUserAdapter(randomUsersPresenter,
+            mRandomUsersRecyclerView.setAdapter(new RandomUsersAdapter(randomUsersPresenter,
                     RandomUsersActivity.this));
         } else {
-            mRandomUsersRecyclerView.swapAdapter(new RandomUserAdapter(randomUsersPresenter,
+            mRandomUsersRecyclerView.swapAdapter(new RandomUsersAdapter(randomUsersPresenter,
                     RandomUsersActivity.this), false);
         }
     }

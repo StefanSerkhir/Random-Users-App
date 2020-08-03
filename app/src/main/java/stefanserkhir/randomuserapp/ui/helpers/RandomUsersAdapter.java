@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import stefanserkhir.randomuserapp.R;
 import stefanserkhir.randomuserapp.presenter.RandomUsersPresenterImpl;
 
-public class RandomUserAdapter extends RecyclerView.Adapter {
+public class RandomUsersAdapter extends RecyclerView.Adapter {
     private static final int ITEM_VIEW = 1;
     private static final int ITEM_PROGRESS = 0;
 
     private final RandomUsersPresenterImpl mRandomUsersPresenter;
     private Activity mActivity;
 
-    public RandomUserAdapter(RandomUsersPresenterImpl randomUsersPresenter, Activity activity) {
+    public RandomUsersAdapter(RandomUsersPresenterImpl randomUsersPresenter, Activity activity) {
         mRandomUsersPresenter = randomUsersPresenter;
         mActivity = activity;
     }
