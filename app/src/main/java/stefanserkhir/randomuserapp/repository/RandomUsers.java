@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import stefanserkhir.randomuserapp.repository.model.RandomUser;
+import stefanserkhir.randomuserapp.model.RandomUser;
 
 public class RandomUsers {
     @SerializedName("results")

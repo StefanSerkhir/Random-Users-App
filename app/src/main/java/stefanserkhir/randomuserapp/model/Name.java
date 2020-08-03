@@ -1,4 +1,4 @@
-package stefanserkhir.randomuserapp.repository.model;
+package stefanserkhir.randomuserapp.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

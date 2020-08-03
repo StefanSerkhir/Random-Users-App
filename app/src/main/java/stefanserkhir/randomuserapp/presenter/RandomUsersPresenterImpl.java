@@ -32,7 +32,7 @@ public class RandomUsersPresenterImpl implements RandomUsersPresenter, AfterFetc
     public void onBindRepositoryItemViewAtPosition(int position, RepositoryItemView itemView) {
         RandomUser randomUser = mRandomUsers.get(position);
         itemView.setUserNumber(position);
-        itemView.setMask(randomUser.getGender(), randomUser.getAvatarURL());
+        itemView.setMask(randomUser.getGender(), randomUser.getPicture().getLarge());
         itemView.setUserFullName(randomUser.getFullName());
     }
 
@@ -47,17 +47,19 @@ public class RandomUsersPresenterImpl implements RandomUsersPresenter, AfterFetc
 
     @Override
     public void doAfterFetchUsers(List<RandomUser> randomUsers) {
-        mLoadingPage++;
-        setLoading(false);
-        boolean wayUpdate;
-        if (mRandomUsers.size() == 0 | mLoadingPage <= 2) {
-            wayUpdate = true;
-            mRandomUsers = randomUsers;
-        } else {
-            wayUpdate = false;
-            mRandomUsers.addAll(randomUsers);
-        }
+        if (mRandomUsers != null) {
+            mLoadingPage++;
+            setLoading(false);
+            boolean wayUpdate;
+            if (mRandomUsers.size() == 0 | mLoadingPage <= 2) {
+                wayUpdate = true;
+                mRandomUsers = randomUsers;
+            } else {
+                wayUpdate = false;
+                mRandomUsers.addAll(randomUsers);
+            }
 
-        mUpdateUICallback.updateUI(wayUpdate);
+            mUpdateUICallback.updateUI(wayUpdate);
+        }
     }
 }

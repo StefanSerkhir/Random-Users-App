@@ -22,7 +22,7 @@ public class FetchRandomUsersTask extends AsyncTask<Void, Void, List<RandomUser>
 
     @Override
     protected List<RandomUser> doInBackground(Void... voids) {
-        return new RandomUserRepository().getData(mLoadingPage);
+        return new RandomUserRepository().fetchRandomUsers(mLoadingPage);
     }
 
     @Override
