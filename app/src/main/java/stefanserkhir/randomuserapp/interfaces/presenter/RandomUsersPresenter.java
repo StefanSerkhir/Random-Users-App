@@ -13,8 +13,6 @@ public interface RandomUsersPresenter {
 
     void onUpdatingList(boolean refreshOrUploading);
 
-   // void on
-
     void onBindRepositoryItemViewAtPosition(int position, RepositoryItemView itemView);
 
     int getRepositoryItemsCount();

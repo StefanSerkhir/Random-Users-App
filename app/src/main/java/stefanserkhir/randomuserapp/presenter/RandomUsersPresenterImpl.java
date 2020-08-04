@@ -14,10 +14,10 @@ import stefanserkhir.randomuserapp.repository.RandomUsers;
 
 public class RandomUsersPresenterImpl implements RandomUsersPresenter, Callback<RandomUsers> {
     private static RandomUsersPresenter sRandomUsersPresenter;
+    private RandomUsersView mView;
     private List<RandomUser> mRandomUsers;
     private int mLoadingPage = 1;
     private boolean mLoading;
-    private RandomUsersView mView;
 
     private RandomUsersPresenterImpl() {}
 
@@ -31,7 +31,12 @@ public class RandomUsersPresenterImpl implements RandomUsersPresenter, Callback<
     @Override
     public void onAttachView(RandomUsersView view) {
         mView = view;
-        mView.toggleListAndProgressBar(false);
+        if (mRandomUsers != null) {
+            mView.updateUI(false);
+            mView.toggleListAndProgressBar(true);
+        } else {
+            onUpdatingList(true);
+        }
     }
 
     @Override
@@ -73,12 +78,10 @@ public class RandomUsersPresenterImpl implements RandomUsersPresenter, Callback<
         if (response.body() != null) {
             mLoadingPage++;
             setLoading(false);
-            boolean wayUpdate;
-            if (mRandomUsers == null | mLoadingPage <= 2) {
-                wayUpdate = true;
+            boolean wayUpdate = mRandomUsers == null | mLoadingPage <= 2;
+            if (wayUpdate) {
                 mRandomUsers = response.body().getResults();
             } else {
-                wayUpdate = false;
                 mRandomUsers.addAll(response.body().getResults());
             }
 

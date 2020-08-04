@@ -50,8 +50,8 @@ public class RandomUsersActivity extends AppCompatActivity implements RandomUser
 
         randomUsersPresenter = RandomUsersPresenterImpl.getInstance();
         randomUsersPresenter.onAttachView(this);
-
-        reloadUsers();
+        mRandomUsersRecyclerView.addOnScrollListener(new ScrollToEndListener(mLinearLayoutManager,
+                randomUsersPresenter));
     }
 
     @Override
@@ -94,8 +94,6 @@ public class RandomUsersActivity extends AppCompatActivity implements RandomUser
 
     private void reloadUsers() {
         randomUsersPresenter.onUpdatingList(true);
-        mRandomUsersRecyclerView.addOnScrollListener(new ScrollToEndListener(mLinearLayoutManager,
-                randomUsersPresenter));
     }
 
     @Override
