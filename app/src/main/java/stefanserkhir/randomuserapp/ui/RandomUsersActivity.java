@@ -16,13 +16,14 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import stefanserkhir.randomuserapp.R;
+import stefanserkhir.randomuserapp.interfaces.presenter.RandomUsersPresenter;
 import stefanserkhir.randomuserapp.interfaces.ui.RandomUsersView;
 import stefanserkhir.randomuserapp.presenter.RandomUsersPresenterImpl;
 import stefanserkhir.randomuserapp.ui.helpers.RandomUsersAdapter;
 import stefanserkhir.randomuserapp.ui.helpers.ScrollToEndListener;
 
 public class RandomUsersActivity extends AppCompatActivity implements RandomUsersView {
-    private RandomUsersPresenterImpl randomUsersPresenter;
+    private RandomUsersPresenter randomUsersPresenter;
     private RecyclerView mRandomUsersRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private SwipeRefreshLayout mRefreshLayout;
@@ -47,7 +48,10 @@ public class RandomUsersActivity extends AppCompatActivity implements RandomUser
             mRefreshLayout.setRefreshing(false);
         });
 
-        reloadUsers();
+        randomUsersPresenter = RandomUsersPresenterImpl.getInstance();
+        randomUsersPresenter.onAttachView(this);
+        mRandomUsersRecyclerView.addOnScrollListener(new ScrollToEndListener(mLinearLayoutManager,
+                randomUsersPresenter));
     }
 
     @Override
@@ -79,7 +83,7 @@ public class RandomUsersActivity extends AppCompatActivity implements RandomUser
     public void onErrorFetchingData() {
         Snackbar.make(mRefreshLayout, R.string.error_load,
                 BaseTransientBottomBar.LENGTH_INDEFINITE).setAction(R.string.retry,
-                view -> randomUsersPresenter.fetchRandomUsers()).show();
+                view -> randomUsersPresenter.onUpdatingList(false)).show();
     }
 
     @Override
@@ -89,9 +93,13 @@ public class RandomUsersActivity extends AppCompatActivity implements RandomUser
     }
 
     private void reloadUsers() {
-        randomUsersPresenter = new RandomUsersPresenterImpl(this);
-        randomUsersPresenter.fetchRandomUsers();
-        mRandomUsersRecyclerView.addOnScrollListener(new ScrollToEndListener(mLinearLayoutManager,
-                randomUsersPresenter));
+        randomUsersPresenter.onUpdatingList(true);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        randomUsersPresenter.onDetachView();
     }
 }
