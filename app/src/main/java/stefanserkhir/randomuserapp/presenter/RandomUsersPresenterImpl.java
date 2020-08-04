@@ -1,6 +1,5 @@
 package stefanserkhir.randomuserapp.presenter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -12,27 +11,51 @@ import stefanserkhir.randomuserapp.interfaces.ui.RepositoryItemView;
 import stefanserkhir.randomuserapp.model.RandomUser;
 import stefanserkhir.randomuserapp.repository.RandomUsersRepository;
 import stefanserkhir.randomuserapp.repository.RandomUsers;
-import stefanserkhir.randomuserapp.ui.RandomUsersActivity;
 
 public class RandomUsersPresenterImpl implements RandomUsersPresenter, Callback<RandomUsers> {
-    private List<RandomUser> mRandomUsers = new ArrayList<>();
+    private static RandomUsersPresenter sRandomUsersPresenter;
+    private RandomUsersView mView;
+    private List<RandomUser> mRandomUsers;
     private int mLoadingPage = 1;
     private boolean mLoading;
-    private RandomUsersView mView;
 
-    public RandomUsersPresenterImpl(RandomUsersActivity view) {
+    private RandomUsersPresenterImpl() {}
+
+    public static RandomUsersPresenter getInstance() {
+        if (sRandomUsersPresenter == null) {
+            sRandomUsersPresenter = new RandomUsersPresenterImpl();
+        }
+        return sRandomUsersPresenter;
+    }
+
+    @Override
+    public void onAttachView(RandomUsersView view) {
         mView = view;
-        mView.toggleListAndProgressBar(false);
+        if (mRandomUsers != null) {
+            mView.updateUI(false);
+            mView.toggleListAndProgressBar(true);
+        } else {
+            onUpdatingList(true);
+        }
     }
 
-    public boolean isLoading() {
-        return mLoading;
-    }
-
+    @Override
     public void setLoading(boolean isLoading) {
         mLoading = isLoading;
     }
 
+    @Override
+    public boolean isLoading() {
+        return mLoading;
+    }
+
+    @Override
+    public void onUpdatingList(boolean refreshOrUploading) {
+        new RandomUsersRepository(this)
+                .fetchRandomUsersAsync(mLoadingPage = refreshOrUploading ? 1 : mLoadingPage);
+    }
+
+    @Override
     public void onBindRepositoryItemViewAtPosition(int position, RepositoryItemView itemView) {
         RandomUser randomUser = mRandomUsers.get(position);
         itemView.setUserNumber(position);
@@ -40,13 +63,14 @@ public class RandomUsersPresenterImpl implements RandomUsersPresenter, Callback<
         itemView.setUserFullName(randomUser.getFullName());
     }
 
-    public int getRepositoriesItemsCount() {
+    @Override
+    public int getRepositoryItemsCount() {
         return mRandomUsers.size();
     }
 
     @Override
-    public void fetchRandomUsers() {
-        new RandomUsersRepository(this).fetchRandomUsersAsync(mLoadingPage);
+    public void onDetachView() {
+        mView = null;
     }
 
     @Override
@@ -54,12 +78,10 @@ public class RandomUsersPresenterImpl implements RandomUsersPresenter, Callback<
         if (response.body() != null) {
             mLoadingPage++;
             setLoading(false);
-            boolean wayUpdate;
-            if (mRandomUsers.size() == 0 | mLoadingPage <= 2) {
-                wayUpdate = true;
+            boolean wayUpdate = mRandomUsers == null | mLoadingPage <= 2;
+            if (wayUpdate) {
                 mRandomUsers = response.body().getResults();
             } else {
-                wayUpdate = false;
                 mRandomUsers.addAll(response.body().getResults());
             }
 

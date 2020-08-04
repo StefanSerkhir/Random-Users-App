@@ -8,24 +8,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import stefanserkhir.randomuserapp.R;
-import stefanserkhir.randomuserapp.presenter.RandomUsersPresenterImpl;
+import stefanserkhir.randomuserapp.interfaces.presenter.RandomUsersPresenter;
 
 public class RandomUsersAdapter extends RecyclerView.Adapter {
     private static final int ITEM_VIEW = 1;
     private static final int ITEM_PROGRESS = 0;
 
-    private final RandomUsersPresenterImpl mRandomUsersPresenter;
+    private final RandomUsersPresenter mRandomUsersPresenter;
     private Activity mActivity;
 
-    public RandomUsersAdapter(RandomUsersPresenterImpl randomUsersPresenter, Activity activity) {
+    public RandomUsersAdapter(RandomUsersPresenter randomUsersPresenter, Activity activity) {
         mRandomUsersPresenter = randomUsersPresenter;
         mActivity = activity;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return (position + 1) != mRandomUsersPresenter.getRepositoriesItemsCount() ? ITEM_VIEW :
-                                                                                    ITEM_PROGRESS;
+        return (position + 1) != mRandomUsersPresenter
+                .getRepositoryItemsCount() ? ITEM_VIEW : ITEM_PROGRESS;
     }
 
     @NonNull
@@ -51,6 +51,6 @@ public class RandomUsersAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return mRandomUsersPresenter.getRepositoriesItemsCount();
+        return mRandomUsersPresenter.getRepositoryItemsCount();
     }
 }

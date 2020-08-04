@@ -4,14 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import stefanserkhir.randomuserapp.presenter.RandomUsersPresenterImpl;
+import stefanserkhir.randomuserapp.interfaces.presenter.RandomUsersPresenter;
 
 public class ScrollToEndListener extends RecyclerView.OnScrollListener  {
     private LinearLayoutManager mLinearLayoutManager;
-    private RandomUsersPresenterImpl mRandomUsersPresenter;
+    private RandomUsersPresenter mRandomUsersPresenter;
 
     public ScrollToEndListener(LinearLayoutManager linearLayoutManager,
-                               RandomUsersPresenterImpl randomUsersPresenter) {
+                               RandomUsersPresenter randomUsersPresenter) {
         mLinearLayoutManager = linearLayoutManager;
         mRandomUsersPresenter = randomUsersPresenter;
     }
@@ -25,7 +25,7 @@ public class ScrollToEndListener extends RecyclerView.OnScrollListener  {
         if (!mRandomUsersPresenter.isLoading()) {
             if (visibleItemsCount + firstVisibleItem >= totalItemsCount) {
                 mRandomUsersPresenter.setLoading(true);
-                mRandomUsersPresenter.fetchRandomUsers();
+                mRandomUsersPresenter.onUpdatingList(false);
             }
         }
     }
