@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import stefanserkhir.randomuserapp.R;
 import stefanserkhir.randomuserapp.presenter.RandomUsersPresenterImpl;
 
-public class RandomUserAdapter extends RecyclerView.Adapter {
+public class RandomUsersAdapter extends RecyclerView.Adapter {
     private static final int ITEM_VIEW = 1;
     private static final int ITEM_PROGRESS = 0;
 
     private final RandomUsersPresenterImpl mRandomUsersPresenter;
     private Activity mActivity;
 
-    public RandomUserAdapter(RandomUsersPresenterImpl randomUsersPresenter, Activity activity) {
+    public RandomUsersAdapter(RandomUsersPresenterImpl randomUsersPresenter, Activity activity) {
         mRandomUsersPresenter = randomUsersPresenter;
         mActivity = activity;
     }
@@ -37,7 +37,7 @@ public class RandomUserAdapter extends RecyclerView.Adapter {
             return new RandomUserHolder(itemView, mActivity);
         } else {
             View itemView = mActivity.getLayoutInflater().inflate(R.layout.progress_bar, parent, false);
-            return new ProgressBarHolder(itemView, mActivity);
+            return new ProgressBarHolder(itemView);
         }
     }
 
@@ -46,9 +46,6 @@ public class RandomUserAdapter extends RecyclerView.Adapter {
         if (holder instanceof RandomUserHolder) {
             RandomUserHolder randomUserHolder = (RandomUserHolder) holder;
             mRandomUsersPresenter.onBindRepositoryItemViewAtPosition(position, randomUserHolder);
-        } else {
-            ProgressBarHolder progressBarHolder = (ProgressBarHolder) holder;
-            progressBarHolder.bindProgressBarItem();
         }
     }
 
