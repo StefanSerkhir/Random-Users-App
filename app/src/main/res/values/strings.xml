@@ -2,4 +2,7 @@
     <string name="app_name">Random User App</string>
     <string name="user_number">%1$d.</string>
     <string name="reload_users">Reload users</string>
+    <string name="error_load">Users loading error</string>
+    <string name="retry">Retry</string>
+    <string name="loading_users">Loading...</string>
 </resources>

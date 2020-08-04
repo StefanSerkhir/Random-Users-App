@@ -17,16 +17,5 @@ public class ProgressBarHolder extends RecyclerView.ViewHolder {
 
     public ProgressBarHolder(@NonNull View itemView, Context context) {
         super(itemView);
-
-        mProgressBar = itemView.findViewById(R.id.progress_bar);
-
-        mContext = context;
-    }
-
-    public void bindProgressBarItem() {
-        mProgressBar.getIndeterminateDrawable().setColorFilter(
-                ContextCompat.getColor(mContext, R.color.colorPrimary),
-                PorterDuff.Mode.MULTIPLY);
-        mProgressBar.setIndeterminate(true);
     }
 }

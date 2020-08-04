@@ -18,10 +18,11 @@ public class RandomUsersPresenterImpl implements RandomUsersPresenter, Callback<
     private List<RandomUser> mRandomUsers = new ArrayList<>();
     private int mLoadingPage = 1;
     private boolean mLoading;
-    private RandomUsersView mUpdateUICallback;
+    private RandomUsersView mView;
 
-    public RandomUsersPresenterImpl(RandomUsersActivity updateUICallback) {
-        mUpdateUICallback = updateUICallback;
+    public RandomUsersPresenterImpl(RandomUsersActivity view) {
+        mView = view;
+        mView.toggleListAndProgressBar(false);
     }
 
     public boolean isLoading() {
@@ -62,12 +63,13 @@ public class RandomUsersPresenterImpl implements RandomUsersPresenter, Callback<
                 mRandomUsers.addAll(response.body().getResults());
             }
 
-            mUpdateUICallback.updateUI(wayUpdate);
+            mView.toggleListAndProgressBar(true);
+            mView.updateUI(wayUpdate);
         }
     }
 
     @Override
     public void onFailure(Call<RandomUsers> call, Throwable t) {
-        // TODO Crate UI Method like "onErrorFetchingUsers"
+        mView.onErrorFetchingData();
     }
 }

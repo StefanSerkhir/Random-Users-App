@@ -46,9 +46,6 @@ public class RandomUsersAdapter extends RecyclerView.Adapter {
         if (holder instanceof RandomUserHolder) {
             RandomUserHolder randomUserHolder = (RandomUserHolder) holder;
             mRandomUsersPresenter.onBindRepositoryItemViewAtPosition(position, randomUserHolder);
-        } else {
-            ProgressBarHolder progressBarHolder = (ProgressBarHolder) holder;
-            progressBarHolder.bindProgressBarItem();
         }
     }
 
