@@ -1,5 +1,23 @@
 package stefanserkhir.randomuserapp.interfaces.presenter;
 
+import stefanserkhir.randomuserapp.interfaces.ui.RandomUsersView;
+import stefanserkhir.randomuserapp.interfaces.ui.RepositoryItemView;
+
 public interface RandomUsersPresenter {
-    void fetchRandomUsers();
+
+    void onAttachView(RandomUsersView view);
+
+    void setLoading(boolean isLoading);
+
+    boolean isLoading();
+
+    void onUpdatingList(boolean refreshOrUploading);
+
+   // void on
+
+    void onBindRepositoryItemViewAtPosition(int position, RepositoryItemView itemView);
+
+    int getRepositoryItemsCount();
+
+    void onDetachView();
 }
