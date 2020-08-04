@@ -1,41 +1,44 @@
 package stefanserkhir.randomuserapp.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class RandomUser {
-    private String mGender;
-    private String mTitle;
-    private String mFirstName;
-    private String mLastName;
-    private String mAvatarURL;
+    @SerializedName("gender")
+    @Expose
+    private String gender;
+    @SerializedName("name")
+    @Expose
+    private Name name;
+    @SerializedName("picture")
+    @Expose
+    private Picture picture;
 
     public String getGender() {
-        return mGender;
+        return gender;
     }
 
     public void setGender(String gender) {
-        mGender = gender;
+        this.gender = gender;
     }
 
-    public void setTitle(String title) {
-        mTitle = title;
+    public Name getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        mFirstName = firstName;
+    public void setName(Name name) {
+        this.name = name;
     }
 
-    public void setLastName(String lastName) {
-        mLastName = lastName;
+    public Picture getPicture() {
+        return picture;
     }
 
-    public String getAvatarURL() {
-        return mAvatarURL;
-    }
-
-    public void setAvatarURL(String avatarURL) {
-        mAvatarURL = avatarURL;
+    public void setPicture(Picture picture) {
+        this.picture = picture;
     }
 
     public String getFullName() {
-        return mTitle + ", " + mFirstName + " " + mLastName;
+        return name.getTitle() + ", " + name.getFirst() + " " + name.getLast();
     }
 }
