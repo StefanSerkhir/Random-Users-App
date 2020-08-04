@@ -37,7 +37,7 @@ public class RandomUsersAdapter extends RecyclerView.Adapter {
             return new RandomUserHolder(itemView, mActivity);
         } else {
             View itemView = mActivity.getLayoutInflater().inflate(R.layout.progress_bar, parent, false);
-            return new ProgressBarHolder(itemView, mActivity);
+            return new ProgressBarHolder(itemView);
         }
     }
 
