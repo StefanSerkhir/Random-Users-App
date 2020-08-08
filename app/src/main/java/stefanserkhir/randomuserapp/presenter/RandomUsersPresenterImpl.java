@@ -6,8 +6,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import stefanserkhir.randomuserapp.interfaces.presenter.RandomUsersPresenter;
-import stefanserkhir.randomuserapp.interfaces.ui.RandomUsersView;
-import stefanserkhir.randomuserapp.interfaces.ui.RepositoryItemView;
+import stefanserkhir.randomuserapp.interfaces.views.RandomUsersView;
+import stefanserkhir.randomuserapp.interfaces.views.RepositoryItemView;
 import stefanserkhir.randomuserapp.model.RandomUser;
 import stefanserkhir.randomuserapp.repository.RandomUsersRepository;
 import stefanserkhir.randomuserapp.repository.RandomUsers;
@@ -33,7 +33,7 @@ public class RandomUsersPresenterImpl implements RandomUsersPresenter, Callback<
         mView = view;
         if (mRandomUsers != null) {
             mView.updateUI(false);
-            mView.toggleListAndProgressBar(true);
+            mView.toggleOn(true);
         } else {
             onUpdatingList(true);
         }
@@ -58,9 +58,9 @@ public class RandomUsersPresenterImpl implements RandomUsersPresenter, Callback<
     @Override
     public void onBindRepositoryItemViewAtPosition(int position, RepositoryItemView itemView) {
         RandomUser randomUser = mRandomUsers.get(position);
-        itemView.setUserNumber(position);
+        itemView.setNumber(position);
         itemView.setMask(randomUser.getGender(), randomUser.getPicture().getLarge());
-        itemView.setUserFullName(randomUser.getFullName());
+        itemView.setName(randomUser.getFullName());
     }
 
     @Override
@@ -85,13 +85,13 @@ public class RandomUsersPresenterImpl implements RandomUsersPresenter, Callback<
                 mRandomUsers.addAll(response.body().getResults());
             }
 
-            mView.toggleListAndProgressBar(true);
+            mView.toggleOn(true);
             mView.updateUI(wayUpdate);
         }
     }
 
     @Override
     public void onFailure(Call<RandomUsers> call, Throwable t) {
-        mView.onErrorFetchingData();
+        mView.showError();
     }
 }

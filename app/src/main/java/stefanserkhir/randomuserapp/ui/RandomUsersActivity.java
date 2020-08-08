@@ -17,7 +17,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import stefanserkhir.randomuserapp.R;
 import stefanserkhir.randomuserapp.interfaces.presenter.RandomUsersPresenter;
-import stefanserkhir.randomuserapp.interfaces.ui.RandomUsersView;
+import stefanserkhir.randomuserapp.interfaces.views.RandomUsersView;
 import stefanserkhir.randomuserapp.presenter.RandomUsersPresenterImpl;
 import stefanserkhir.randomuserapp.ui.helpers.RandomUsersAdapter;
 import stefanserkhir.randomuserapp.ui.helpers.ScrollToEndListener;
@@ -43,10 +43,8 @@ public class RandomUsersActivity extends AppCompatActivity implements RandomUser
 
         mRefreshLayout = findViewById(R.id.random_users_container);
         mRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
-        mRefreshLayout.setOnRefreshListener(() -> {
-            reloadUsers();
-            mRefreshLayout.setRefreshing(false);
-        });
+        mRefreshLayout.setOnRefreshListener(() ->
+                randomUsersPresenter.onUpdatingList(true));
 
         randomUsersPresenter = RandomUsersPresenterImpl.getInstance();
         randomUsersPresenter.onAttachView(this);
@@ -63,7 +61,7 @@ public class RandomUsersActivity extends AppCompatActivity implements RandomUser
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.reload_users) {
-            reloadUsers();
+            randomUsersPresenter.onUpdatingList(true);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -72,28 +70,25 @@ public class RandomUsersActivity extends AppCompatActivity implements RandomUser
     public void updateUI(boolean wayUpdate) {
         if (wayUpdate) {
             mRandomUsersRecyclerView.setAdapter(new RandomUsersAdapter(randomUsersPresenter,
-                    RandomUsersActivity.this));
+                    this));
         } else {
             mRandomUsersRecyclerView.swapAdapter(new RandomUsersAdapter(randomUsersPresenter,
-                    RandomUsersActivity.this), false);
+                    this), false);
         }
+        mRefreshLayout.setRefreshing(false);
     }
 
     @Override
-    public void onErrorFetchingData() {
+    public void showError() {
         Snackbar.make(mRefreshLayout, R.string.error_load,
                 BaseTransientBottomBar.LENGTH_INDEFINITE).setAction(R.string.retry,
                 view -> randomUsersPresenter.onUpdatingList(false)).show();
     }
 
     @Override
-    public void toggleListAndProgressBar(boolean toggle) {
+    public void toggleOn(boolean toggle) {
         mRandomUsersRecyclerView.setVisibility(toggle ? View.VISIBLE : View.GONE);
         mLoadingBar.setVisibility(toggle ? View.GONE : View.VISIBLE);
-    }
-
-    private void reloadUsers() {
-        randomUsersPresenter.onUpdatingList(true);
     }
 
     @Override

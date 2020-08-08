@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso;
 
 import stefanserkhir.randomuserapp.utils.AvatarTransformation;
 import stefanserkhir.randomuserapp.R;
-import stefanserkhir.randomuserapp.interfaces.ui.RepositoryItemView;
+import stefanserkhir.randomuserapp.interfaces.views.RepositoryItemView;
 
 public class RandomUserHolder extends ViewHolder implements RepositoryItemView {
     private Context mContext;
@@ -31,7 +31,7 @@ public class RandomUserHolder extends ViewHolder implements RepositoryItemView {
     }
 
     @Override
-    public void setUserNumber(int number) {
+    public void setNumber(int number) {
         mUserNumberTextView.setText(mContext.getString(R.string.user_number, number + 1));
     }
 
@@ -48,7 +48,7 @@ public class RandomUserHolder extends ViewHolder implements RepositoryItemView {
     }
 
     @Override
-    public void setUserFullName(String fullName) {
-        mUserFullNameTextView.setText(fullName);
+    public void setName(String name) {
+        mUserFullNameTextView.setText(name);
     }
 }
