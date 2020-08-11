@@ -17,15 +17,14 @@ import com.google.android.material.snackbar.Snackbar;
 
 import stefanserkhir.randomuserapp.R;
 import stefanserkhir.randomuserapp.interfaces.presenter.RandomUsersPresenter;
-import stefanserkhir.randomuserapp.interfaces.ui.RandomUsersView;
+import stefanserkhir.randomuserapp.interfaces.views.RandomUsersView;
 import stefanserkhir.randomuserapp.presenter.RandomUsersPresenterImpl;
-import stefanserkhir.randomuserapp.ui.helpers.RandomUsersAdapter;
+import stefanserkhir.randomuserapp.ui.adapter.RandomUsersAdapter;
 import stefanserkhir.randomuserapp.ui.helpers.ScrollToEndListener;
 
 public class RandomUsersActivity extends AppCompatActivity implements RandomUsersView {
-    private RandomUsersPresenter randomUsersPresenter;
+    private RandomUsersPresenter mPresenter;
     private RecyclerView mRandomUsersRecyclerView;
-    private LinearLayoutManager mLinearLayoutManager;
     private SwipeRefreshLayout mRefreshLayout;
     private LinearLayout mLoadingBar;
 
@@ -38,20 +37,17 @@ public class RandomUsersActivity extends AppCompatActivity implements RandomUser
 
         mRandomUsersRecyclerView = findViewById(R.id.random_users_recycler_view);
         mRandomUsersRecyclerView.setHasFixedSize(true);
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        mRandomUsersRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mRandomUsersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mRefreshLayout = findViewById(R.id.random_users_container);
         mRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
-        mRefreshLayout.setOnRefreshListener(() -> {
-            reloadUsers();
-            mRefreshLayout.setRefreshing(false);
-        });
+        mRefreshLayout.setOnRefreshListener(() ->
+                mPresenter.onUpdatingList(true));
 
-        randomUsersPresenter = RandomUsersPresenterImpl.getInstance();
-        randomUsersPresenter.onAttachView(this);
-        mRandomUsersRecyclerView.addOnScrollListener(new ScrollToEndListener(mLinearLayoutManager,
-                randomUsersPresenter));
+        mPresenter = RandomUsersPresenterImpl.getInstance();
+        mPresenter.onAttachView(this);
+        mRandomUsersRecyclerView.addOnScrollListener(new ScrollToEndListener(
+                mRandomUsersRecyclerView.getLayoutManager(), mPresenter));
     }
 
     @Override
@@ -63,7 +59,7 @@ public class RandomUsersActivity extends AppCompatActivity implements RandomUser
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.reload_users) {
-            reloadUsers();
+            mPresenter.onUpdatingList(true);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -71,35 +67,32 @@ public class RandomUsersActivity extends AppCompatActivity implements RandomUser
     @Override
     public void updateUI(boolean wayUpdate) {
         if (wayUpdate) {
-            mRandomUsersRecyclerView.setAdapter(new RandomUsersAdapter(randomUsersPresenter,
-                    RandomUsersActivity.this));
+            mRandomUsersRecyclerView.setAdapter(new RandomUsersAdapter(mPresenter,
+                    this));
         } else {
-            mRandomUsersRecyclerView.swapAdapter(new RandomUsersAdapter(randomUsersPresenter,
-                    RandomUsersActivity.this), false);
+            mRandomUsersRecyclerView.swapAdapter(new RandomUsersAdapter(mPresenter,
+                    this), false);
         }
+        mRefreshLayout.setRefreshing(false);
     }
 
     @Override
-    public void onErrorFetchingData() {
+    public void showError() {
         Snackbar.make(mRefreshLayout, R.string.error_load,
                 BaseTransientBottomBar.LENGTH_INDEFINITE).setAction(R.string.retry,
-                view -> randomUsersPresenter.onUpdatingList(false)).show();
+                view -> mPresenter.onUpdatingList(false)).show();
     }
 
     @Override
-    public void toggleListAndProgressBar(boolean toggle) {
+    public void toggleOn(boolean toggle) {
         mRandomUsersRecyclerView.setVisibility(toggle ? View.VISIBLE : View.GONE);
         mLoadingBar.setVisibility(toggle ? View.GONE : View.VISIBLE);
-    }
-
-    private void reloadUsers() {
-        randomUsersPresenter.onUpdatingList(true);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        randomUsersPresenter.onDetachView();
+        mPresenter.onDetachView();
     }
 }

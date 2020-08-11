@@ -1,4 +1,4 @@
-package stefanserkhir.randomuserapp.ui.helpers;
+package stefanserkhir.randomuserapp.ui.adapter;
 
 import android.app.Activity;
 import android.view.View;
@@ -14,17 +14,17 @@ public class RandomUsersAdapter extends RecyclerView.Adapter {
     private static final int ITEM_VIEW = 1;
     private static final int ITEM_PROGRESS = 0;
 
-    private final RandomUsersPresenter mRandomUsersPresenter;
+    private final RandomUsersPresenter mPresenter;
     private Activity mActivity;
 
-    public RandomUsersAdapter(RandomUsersPresenter randomUsersPresenter, Activity activity) {
-        mRandomUsersPresenter = randomUsersPresenter;
+    public RandomUsersAdapter(RandomUsersPresenter presenter, Activity activity) {
+        mPresenter = presenter;
         mActivity = activity;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return (position + 1) != mRandomUsersPresenter
+        return (position + 1) != mPresenter
                 .getRepositoryItemsCount() ? ITEM_VIEW : ITEM_PROGRESS;
     }
 
@@ -45,12 +45,12 @@ public class RandomUsersAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof RandomUserHolder) {
             RandomUserHolder randomUserHolder = (RandomUserHolder) holder;
-            mRandomUsersPresenter.onBindRepositoryItemViewAtPosition(position, randomUserHolder);
+            mPresenter.onBindRepositoryItemViewAtPosition(position, randomUserHolder);
         }
     }
 
     @Override
     public int getItemCount() {
-        return mRandomUsersPresenter.getRepositoryItemsCount();
+        return mPresenter.getRepositoryItemsCount();
     }
 }
