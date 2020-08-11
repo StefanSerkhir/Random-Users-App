@@ -1,4 +1,4 @@
-package stefanserkhir.randomuserapp.ui.helpers;
+package stefanserkhir.randomuserapp.ui.adapter;
 
 import android.view.View;
 

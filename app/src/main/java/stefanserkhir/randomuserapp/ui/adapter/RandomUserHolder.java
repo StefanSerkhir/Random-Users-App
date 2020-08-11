@@ -1,6 +1,6 @@
-package stefanserkhir.randomuserapp.ui.helpers;
+package stefanserkhir.randomuserapp.ui.adapter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,27 +12,27 @@ import com.squareup.picasso.Picasso;
 
 import stefanserkhir.randomuserapp.utils.AvatarTransformation;
 import stefanserkhir.randomuserapp.R;
-import stefanserkhir.randomuserapp.interfaces.ui.RepositoryItemView;
+import stefanserkhir.randomuserapp.interfaces.views.RepositoryItemView;
 
 public class RandomUserHolder extends ViewHolder implements RepositoryItemView {
-    private Context mContext;
+    private Activity mActivity;
     private TextView mUserNumberTextView;
     private ImageView mUserAvatarImageView;
     private TextView mUserFullNameTextView;
 
-    public RandomUserHolder(@NonNull View itemView, Context context) {
+    public RandomUserHolder(@NonNull View itemView, Activity activity) {
         super(itemView);
 
         mUserNumberTextView = itemView.findViewById(R.id.user_number);
         mUserAvatarImageView = itemView.findViewById(R.id.user_avatar);
         mUserFullNameTextView = itemView.findViewById(R.id.user_full_name);
 
-        mContext = context;
+        mActivity = activity;
     }
 
     @Override
-    public void setUserNumber(int number) {
-        mUserNumberTextView.setText(mContext.getString(R.string.user_number, number + 1));
+    public void setNumber(int number) {
+        mUserNumberTextView.setText(mActivity.getString(R.string.user_number, number + 1));
     }
 
     @Override
@@ -41,14 +41,14 @@ public class RandomUserHolder extends ViewHolder implements RepositoryItemView {
                 R.drawable.star_shape : R.drawable.heart_shape;
         Picasso.get()
                 .load(avatarURL)
-                .transform(new AvatarTransformation(mContext,
+                .transform(new AvatarTransformation(mActivity,
                         rDrawable))
                 .placeholder(rDrawable)
                 .into(mUserAvatarImageView);
     }
 
     @Override
-    public void setUserFullName(String fullName) {
-        mUserFullNameTextView.setText(fullName);
+    public void setName(String name) {
+        mUserFullNameTextView.setText(name);
     }
 }
